@@ -1,0 +1,77 @@
+<modification>
+	<id>Canned Messages></id>
+	<version>1.5.4</version>
+	<vqmver>2.1.6</vqmver>
+	<author>Xceed</author>
+	<file name="admin/controller/common/header.php">
+		<operation>
+			<search position="after"><![CDATA[$this->data['text_backup'] = $this->language->get('text_backup');]]></search>
+			<add><![CDATA[		$this->data['text_cannedmessage'] = $this->language->get('text_cannedmessage');]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[$this->data['backup'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');]]></search>
+			<add><![CDATA[			$this->data['cannedmessage'] = $this->url->link('sale/cannedmessage', 'token=' . $this->session->data['token'], 'SSL');]]></add>
+		</operation>
+	</file>
+	<file name="admin/language/*/common/header.php">
+		<operation>
+			<search position="before"><![CDATA[$_['text_backup']]]></search>
+			<add><![CDATA[$_['text_cannedmessage']           = 'Canned Message';]]></add>
+		</operation>
+	</file>
+	<file name="admin/view/template/common/header.tpl">
+		<operation>
+			<search position="after"><![CDATA[<li><a href="<?php echo $backup; ?>"><?php echo $text_backup; ?></a></li>]]></search>
+			<add><![CDATA[        <li><a href="<?php echo $cannedmessage; ?>"><?php echo $text_cannedmessage; ?></a></li>]]></add>
+		</operation>
+	</file>
+<file name="admin/view/template/sale/order_info.tpl">
+		<operation>
+			<search position="before"><![CDATA[<td><?php echo $entry_notify; ?></td>]]></search>
+			<add><![CDATA[ 
+ <td><?php echo $entry_cannedmessage; ?></td>
+<script>
+$(document).ready(function() {  
+$("#cannedmessage").change(function() {
+      $("#comment").val($(this).val());
+
+});
+});
+</script>
+            <td><select name="cannedmessage" id="cannedmessage">
+               <option></option>
+               <?php foreach ($cannedmessages as $cannedmessage) { ?>
+             <?php if( $cannedmessage['status']==1) {?>
+                <option value="<?php echo $cannedmessage['description']; ?>"><?php echo $cannedmessage['title']; ?></option>
+<?php }  ?>
+                <?php } ?>
+              </select></td>
+          </tr>]]></add>
+		</operation>
+<operation>
+			<search position="replace"><![CDATA[<textarea name="comment"]]></search>
+			<add><![CDATA[<textarea id="comment" name="comment"]]></add>
+		</operation>
+
+	</file>
+<file name="admin/controller/sale/order.php">
+		<operation>
+			<search position="after"><![CDATA[$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();]]></search>
+			<add><![CDATA[$this->load->model('sale/cannedmessage');
+		
+		$this->data['cannedmessages'] = $this->model_sale_cannedmessage->getCannedMessages();]]></add>
+		</operation>
+<operation>
+			<search position="after"><![CDATA[$this->data['entry_order_status'] = $this->language->get('entry_order_status');]]></search>
+			<add><![CDATA[$this->data['entry_cannedmessage'] = $this->language->get('entry_cannedmessage');]]></add>
+		</operation>
+
+	</file>
+	<file name="admin/language/*/sale/order.php">
+		<operation>
+			<search position="before"><![CDATA[$_['entry_order_status']]]></search>
+			<add><![CDATA[$_['entry_cannedmessage']                      = 'Canned Message:';]]></add>
+		</operation>
+	</file>
+
+</modification>
